@@ -1,32 +1,41 @@
 package com.ogrupo.eventsmicroservice.repositories;
 
-import jakarta.annotation.Nonnull;
-import jakarta.persistence.Tuple;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import com.ogrupo.eventsmicroservice.domain.Event;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-public interface EventRepository extends JpaRepository<Event, String> {
+@Repository
+public class EventRepository {
 
-    @Query(value = "SELECT * FROM event e WHERE parsedatetime(e.date, 'dd/MM/yyyy') > :currentDate", nativeQuery = true)
-    List<Event> findUpcomingEvents(@Param("currentDate") LocalDateTime currentDate);
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    @Query(value = "SELECT e.date as date, " +
-            "AVG(f.rating) as avgFeedbackRating, " +
-            "COUNT(DISTINCT e.id) as eventCount, " +
-            "COUNT(f.id) as feedbackCount " +
-            "FROM event e " +
-            "LEFT JOIN feedback f ON e.id = f.event_id " +
-            "GROUP BY e.date", nativeQuery = true)
-    List<Tuple> findEventsWithAverageFeedbacks();
+    public List<Event> findAll() {
+        String sql = "SELECT * FROM events";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Event.class));
+    }
 
-    @Nonnull
-    Optional<Event> findById(@Nonnull String id);
+    public Event findById(Long id) {
+        String sql = "SELECT * FROM events WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Event.class), id);
+    }
+
+    public int save(Event event) {
+        String sql = "INSERT INTO events (name, location, participants) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(sql, event.getName(), event.getLocation(), event.getParticipants());
+    }
+
+    public int deleteById(Long id) {
+        String sql = "DELETE FROM events WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public List<Event> findEventsWithMinParticipants(int minParticipants) {
+        String sql = "SELECT * FROM events WHERE participants > ?";
+        return jdbcTemplate.query(sql, ps -> ps.setInt(1, minParticipants), new BeanPropertyRowMapper<>(Event.class));
+    }
 }

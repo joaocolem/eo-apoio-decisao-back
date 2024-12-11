@@ -1,37 +1,51 @@
 package com.ogrupo.eventsmicroservice.domain;
 
+import jakarta.persistence.*;
 import java.util.List;
 
-import com.ogrupo.eventsmicroservice.dtos.OrganizerRequestDTO;
-
-import jakarta.persistence.*;
-import lombok.*;
-
-@Entity(name = "organizer")
-@Table(name = "organizer")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@Entity
 public class Organizer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
     private String name;
+    private double rating;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
+    private List<Event> events;
 
-    @Column(nullable = false)
-    private String phoneNumber;
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-    public Organizer(OrganizerRequestDTO organizerRequest) {
-        this.name = organizerRequest.name();
-        this.email = organizerRequest.email();
-        this.phoneNumber = organizerRequest.phoneNumber();
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 }

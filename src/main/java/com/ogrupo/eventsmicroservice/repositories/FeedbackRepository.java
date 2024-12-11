@@ -1,24 +1,26 @@
 package com.ogrupo.eventsmicroservice.repositories;
 
-import jakarta.annotation.Nonnull;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import com.ogrupo.eventsmicroservice.domain.Feedback;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
+@Repository
+public class FeedbackRepository {
 
-    List<Feedback> findByEventId(String eventId);
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    List<Feedback> findByParticipantEmail(String email);
+    public int saveFeedback(Feedback feedback, Long eventId) {
+        String sql = "INSERT INTO feedbacks (rating, comment, event_id) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(sql, feedback.getRating(), feedback.getComment(), eventId);
+    }
 
-    @Query(value = "SELECT AVG(f.rating) FROM feedback f WHERE f.event_id = :eventId", nativeQuery = true)
-    double findAverageRatingByEventId(@Param("eventId") String eventId);
-
-    @Nonnull
-    Optional<Feedback> findById(@Nonnull Long id);
+    public List<Feedback> findFeedbacksWithMinRating(int minRating) {
+        String sql = "SELECT * FROM feedbacks WHERE rating > ?";
+        return jdbcTemplate.query(sql, ps -> ps.setInt(1, minRating), new BeanPropertyRowMapper<>(Feedback.class));
+    }
 }
