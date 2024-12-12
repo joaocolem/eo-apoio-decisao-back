@@ -11,12 +11,13 @@ public class Organizer {
     private Long id;
 
     private String name;
-    private double rating;
+    private String email;
+    private String phoneNumber;
 
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
     private List<Event> events;
 
-    // Getters and Setters
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -28,17 +29,24 @@ public class Organizer {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public double getRating() {
-        return rating;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public List<Event> getEvents() {

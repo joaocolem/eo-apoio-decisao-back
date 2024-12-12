@@ -20,8 +20,8 @@ public class OrganizerRepository {
     }
 
     public int save(Organizer organizer) {
-        String sql = "INSERT INTO organizers (name, rating) VALUES (?, ?)";
-        return jdbcTemplate.update(sql, organizer.getName(), organizer.getRating());
+        String sql = "INSERT INTO organizers (name, email, phone_number) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(sql, "organizer.getName()", "organizer.getEmail()", 3333);
     }
 
     public List<Organizer> findOrganizersWithMinRating(double minRating) {

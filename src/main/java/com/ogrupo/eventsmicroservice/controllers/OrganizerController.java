@@ -21,9 +21,7 @@ public class OrganizerController {
     }
 
     @PostMapping
-    public Organizer createOrganizer(OrganizerRequestDTO organizerRequestDTO) {
-
-        return new Organizer();
-
+    public void createOrganizer(@RequestBody OrganizerRequestDTO organizerRequestDTO) {
+        organizerService.createOrganizer(organizerRequestDTO);
     }
 }

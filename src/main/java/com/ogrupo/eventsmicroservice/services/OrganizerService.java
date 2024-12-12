@@ -14,18 +14,22 @@ public class OrganizerService {
     @Autowired
     private OrganizerRepository organizerRepository;
 
+    // Busca todos os organizadores
     public List<Organizer> getAllOrganizers() {
         return organizerRepository.findAll();
     }
 
     public void createOrganizer(OrganizerRequestDTO organizerRequestDTO) {
         Organizer organizer = new Organizer();
-        organizer.setName(organizerRequestDTO.getName());
-        organizer.setRating(organizerRequestDTO.getRating());
+        organizer.setName(organizerRequestDTO.name());  // Acessando os campos do record diretamente
+        organizer.setEmail(organizerRequestDTO.email());
+        organizer.setPhoneNumber(organizerRequestDTO.phoneNumber());
         organizerRepository.save(organizer);
     }
 
-    public List<Organizer> findOrganizersWithMinRating(double minRating) {
+
+
+    public List<Organizer> getOrganizersWithMinRating(double minRating) {
         return organizerRepository.findOrganizersWithMinRating(minRating);
     }
 }
