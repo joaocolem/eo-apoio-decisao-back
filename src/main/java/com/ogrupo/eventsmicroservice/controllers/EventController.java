@@ -19,6 +19,11 @@ public class EventController {
         return eventService.findAll();
     }
 
+    @GetMapping("/upcoming")
+    public List<Event> getUpcoming() {
+        return eventService.findAll();
+    }
+
     @GetMapping("/{id}")
     public Event getEventById(@PathVariable String id) {
         return eventService.findById(Long.parseLong(id));

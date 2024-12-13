@@ -1,7 +1,7 @@
 package com.ogrupo.eventsmicroservice.domain;
 
 import jakarta.persistence.*;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -21,6 +21,9 @@ public class Event {
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
+
+    // Adicionando o campo eventDate
+    private LocalDateTime eventDate;
 
     // Getters and Setters
     public Long getId() {
@@ -69,5 +72,13 @@ public class Event {
 
     public void setFeedbacks(List<Feedback> feedbacks) {
         this.feedbacks = feedbacks;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(LocalDateTime eventDate) {
+        this.eventDate = eventDate;
     }
 }

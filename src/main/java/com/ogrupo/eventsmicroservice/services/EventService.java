@@ -29,7 +29,4 @@ public class EventService {
         return eventRepository.deleteById(id);
     }
 
-    public List<Event> findEventsWithMinParticipants(int minParticipants) {
-        return eventRepository.findEventsWithMinParticipants(minParticipants);
-    }
 }

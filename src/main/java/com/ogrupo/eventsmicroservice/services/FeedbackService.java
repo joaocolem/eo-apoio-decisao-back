@@ -17,8 +17,4 @@ public class FeedbackService {
     public int saveFeedback(Feedback feedback, Event event) {
         return feedbackRepository.saveFeedback(feedback, event.getId());
     }
-
-    public List<Feedback> findFeedbacksWithMinRating(int minRating) {
-        return feedbackRepository.findFeedbacksWithMinRating(minRating);
-    }
 }

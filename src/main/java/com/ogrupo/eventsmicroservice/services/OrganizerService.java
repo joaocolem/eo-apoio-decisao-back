@@ -1,12 +1,14 @@
 package com.ogrupo.eventsmicroservice.services;
 
 import com.ogrupo.eventsmicroservice.domain.Organizer;
+import com.ogrupo.eventsmicroservice.dtos.OrganizerRatingDTO;
 import com.ogrupo.eventsmicroservice.dtos.OrganizerRequestDTO;
 import com.ogrupo.eventsmicroservice.repositories.OrganizerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrganizerService {
@@ -27,9 +29,10 @@ public class OrganizerService {
         organizerRepository.save(organizer);
     }
 
-
-
-    public List<Organizer> getOrganizersWithMinRating(double minRating) {
-        return organizerRepository.findOrganizersWithMinRating(minRating);
+    public List<OrganizerRatingDTO> findAverageRatingsForAllOrganizers() {
+        // Não precisa de mapeamento adicional, pois já foi feito no repositório
+        return organizerRepository.findAverageRatingsForAllOrganizers();
     }
+
+
 }

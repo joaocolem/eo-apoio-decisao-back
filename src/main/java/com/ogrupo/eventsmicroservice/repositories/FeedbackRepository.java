@@ -18,9 +18,4 @@ public class FeedbackRepository {
         String sql = "INSERT INTO feedbacks (rating, comment, event_id) VALUES (?, ?, ?)";
         return jdbcTemplate.update(sql, feedback.getRating(), feedback.getComment(), eventId);
     }
-
-    public List<Feedback> findFeedbacksWithMinRating(int minRating) {
-        String sql = "SELECT * FROM feedbacks WHERE rating > ?";
-        return jdbcTemplate.query(sql, ps -> ps.setInt(1, minRating), new BeanPropertyRowMapper<>(Feedback.class));
-    }
 }
