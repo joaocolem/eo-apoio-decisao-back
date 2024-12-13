@@ -1,6 +1,8 @@
 package com.ogrupo.eventsmicroservice.controllers;
 
 import com.ogrupo.eventsmicroservice.domain.Event;
+import com.ogrupo.eventsmicroservice.dtos.EventFeedbackSummaryDTO;
+import com.ogrupo.eventsmicroservice.dtos.UpcomingEventDTO;
 import com.ogrupo.eventsmicroservice.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +22,8 @@ public class EventController {
     }
 
     @GetMapping("/upcoming")
-    public List<Event> getUpcoming() {
-        return eventService.findAll();
+    public List<UpcomingEventDTO> getUpcomingEvents() {
+        return eventService.getUpcomingEvents(); // Retorna diretamente a lista de eventos
     }
 
     @GetMapping("/{id}")
@@ -37,5 +39,10 @@ public class EventController {
     @DeleteMapping("/{id}")
     public void deleteEvent(@PathVariable String id) {
         eventService.deleteById(Long.parseLong(id));
+}
+
+    @GetMapping("/feedback-averages")
+    public List<EventFeedbackSummaryDTO> getEventFeedbackSummary() {
+        return eventService.getEventFeedbackSummary();
     }
 }

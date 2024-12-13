@@ -1,6 +1,8 @@
 package com.ogrupo.eventsmicroservice.repositories;
 
 import com.ogrupo.eventsmicroservice.domain.Event;
+import com.ogrupo.eventsmicroservice.dtos.EventFeedbackSummaryDTO;
+import com.ogrupo.eventsmicroservice.dtos.UpcomingEventDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,4 +40,52 @@ public class EventRepository {
         String sql = "SELECT * FROM events WHERE participants > ?";
         return jdbcTemplate.query(sql, ps -> ps.setInt(1, minParticipants), new BeanPropertyRowMapper<>(Event.class));
     }
+
+    public List<EventFeedbackSummaryDTO> getEventFeedbackSummary() {
+        String sql = "SELECT e.event_date AS date, " +
+                "AVG(f.rating) AS avgFeedbackRating, " +
+                "COUNT(DISTINCT e.id) AS eventCount, " +
+                "COUNT(f.id) AS feedbackCount " +
+                "FROM events e " +
+                "LEFT JOIN feedbacks f ON e.id = f.event_id " +
+                "GROUP BY e.event_date";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new EventFeedbackSummaryDTO(
+                        rs.getString("date"), // Pegando o campo date como String
+                        rs.getDouble("avgFeedbackRating"),
+                        rs.getLong("eventCount"),
+                        rs.getLong("feedbackCount")
+                )
+        );
+
+    }
+
+    public List<UpcomingEventDTO> getUpcomingEvents() {
+        String sql = "SELECT e.event_date AS date, " +
+                "e.name, " +
+                "e.description, " +  // Incluindo a coluna 'description'
+                "e.name AS organizerName, " +
+                "e.participants AS maxParticipants, " +
+                "COUNT(s.id) AS registeredParticipants " + // Usando 'subscriptions' para contar os inscritos
+                "FROM events e " +
+                "LEFT JOIN subscriptions s ON e.id = s.event_id " + // Mudança para 'subscriptions'
+                "WHERE e.event_date > CURRENT_DATE " +
+                "GROUP BY e.event_date, e.name, e.description, e.organizer_id, e.participants " + // Incluindo 'description' no GROUP BY
+                "ORDER BY e.event_date ASC";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new UpcomingEventDTO(
+                        rs.getString("date"),
+                        rs.getString("name"),  // 'name' no lugar de 'title'
+                        rs.getString("description"),  // Agora incluindo 'description'
+                        rs.getString("organizerName"),
+                        rs.getInt("maxParticipants"),
+                        rs.getInt("registeredParticipants")
+                )
+        );
+    }
+
+
+
 }
