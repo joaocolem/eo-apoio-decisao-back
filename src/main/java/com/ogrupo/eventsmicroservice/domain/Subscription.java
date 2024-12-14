@@ -1,28 +1,27 @@
 package com.ogrupo.eventsmicroservice.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
 
-@Entity(name = "subscription")
-@Table(name = "subscription")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@Entity
 public class Subscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String subscriberName;
+
     @ManyToOne
+    @JoinColumn(name = "event_id")
     private Event event;
 
-    private String participantEmail;
-
-    public Subscription(Event event, String participantEmail) {
-        this.event = event;
-        this.participantEmail = participantEmail;
+    public String getSubscriberName() {
+        return subscriberName;
     }
+
+    public void setSubscriberName(String subscriberName) {
+        this.subscriberName = subscriberName;
+    }
+
+    // Getters and Setters
 }

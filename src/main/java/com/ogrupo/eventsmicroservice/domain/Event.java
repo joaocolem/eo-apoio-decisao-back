@@ -1,45 +1,84 @@
 package com.ogrupo.eventsmicroservice.domain;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.ogrupo.eventsmicroservice.dtos.EventRequestDTO;
-
-import jakarta.persistence.*;
-import lombok.*;
-
-@Entity(name = "event")
-@Table(name = "event")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@Entity
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private int maxParticipants;
-
-    private int registeredParticipants;
-
-    private String date;
-
-    private String title;
-
-    private String description;
+    private String name;
+    private String location;
+    private int participants;
 
     @ManyToOne
-    @JoinColumn(name = "organizer_id", nullable = false)
+    @JoinColumn(name = "organizer_id")
     private Organizer organizer;
 
-    public Event(EventRequestDTO eventRequest, Organizer organizer) {
-        this.date = eventRequest.date();
-        this.maxParticipants = eventRequest.maxParticipants();
-        this.registeredParticipants = eventRequest.registeredParticipants();
-        this.title = eventRequest.title();
-        this.description = eventRequest.description();
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks;
+
+ 
+    private LocalDateTime eventDate;
+
+   
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(int participants) {
+        this.participants = participants;
+    }
+
+    public Organizer getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(Organizer organizer) {
         this.organizer = organizer;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
+    }
+
+    public LocalDateTime getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(LocalDateTime eventDate) {
+        this.eventDate = eventDate;
     }
 }

@@ -1,15 +1,11 @@
 package com.ogrupo.eventsmicroservice.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.ogrupo.eventsmicroservice.domain.Event;
 import com.ogrupo.eventsmicroservice.dtos.EventFeedbackSummaryDTO;
-import com.ogrupo.eventsmicroservice.dtos.EventRequestDTO;
-import com.ogrupo.eventsmicroservice.dtos.SubscriptionRequestDTO;
+import com.ogrupo.eventsmicroservice.dtos.UpcomingEventDTO;
 import com.ogrupo.eventsmicroservice.services.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,28 +18,31 @@ public class EventController {
 
     @GetMapping
     public List<Event> getAllEvents() {
-        return eventService.getAllEvents();
+        return eventService.findAll();
     }
 
     @GetMapping("/upcoming")
-    public List<Event> getUpcomingEvents() {
-        return eventService.getUpcomingEvents();
+    public List<UpcomingEventDTO> getUpcomingEvents() {
+        return eventService.getUpcomingEvents(); 
+    }
+
+    @GetMapping("/{id}")
+    public Event getEventById(@PathVariable String id) {
+        return eventService.findById(Long.parseLong(id));
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody EventRequestDTO event) {
-        return eventService.createEvent(event);
+    public int createEvent(@RequestBody Event event) {
+        return eventService.save(event);
     }
 
-    @PostMapping("/{eventId}/register")
-    public ResponseEntity<String> registerParticipant(@PathVariable String eventId,
-            @RequestBody SubscriptionRequestDTO subscriptionRequest) {
-        eventService.registerParticipant(eventId, subscriptionRequest.participantEmail());
-        return ResponseEntity.ok("Participant registered successfully");
-    }
+    @DeleteMapping("/{id}")
+    public void deleteEvent(@PathVariable String id) {
+        eventService.deleteById(Long.parseLong(id));
+}
 
     @GetMapping("/feedback-averages")
-    public List<EventFeedbackSummaryDTO> getEventFeedbackAverages() {
-        return eventService.getEventFeedbackAverages();
+    public List<EventFeedbackSummaryDTO> getEventFeedbackSummary() {
+        return eventService.getEventFeedbackSummary();
     }
 }
