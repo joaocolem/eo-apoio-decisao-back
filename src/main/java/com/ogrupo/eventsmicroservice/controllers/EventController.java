@@ -23,7 +23,7 @@ public class EventController {
 
     @GetMapping("/upcoming")
     public List<UpcomingEventDTO> getUpcomingEvents() {
-        return eventService.getUpcomingEvents(); // Retorna diretamente a lista de eventos
+        return eventService.getUpcomingEvents(); 
     }
 
     @GetMapping("/{id}")

@@ -22,10 +22,10 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
 
-    // Adicionando o campo eventDate
+ 
     private LocalDateTime eventDate;
 
-    // Getters and Setters
+   
     public Long getId() {
         return id;
     }

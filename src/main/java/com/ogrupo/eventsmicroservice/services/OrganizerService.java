@@ -16,14 +16,14 @@ public class OrganizerService {
     @Autowired
     private OrganizerRepositoryInterface organizerRepository;
 
-    // Busca todos os organizadores
+
     public List<Organizer> getAllOrganizers() {
         return organizerRepository.findAll();
     }
 
     public void createOrganizer(OrganizerRequestDTO organizerRequestDTO) {
         Organizer organizer = new Organizer();
-        organizer.setName(organizerRequestDTO.name()); // Acessando os campos do record diretamente
+        organizer.setName(organizerRequestDTO.name()); 
         organizer.setEmail(organizerRequestDTO.email());
         organizer.setPhoneNumber(organizerRequestDTO.phoneNumber());
         organizerRepository.save(organizer);

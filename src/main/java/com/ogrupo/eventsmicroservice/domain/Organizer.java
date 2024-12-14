@@ -17,7 +17,7 @@ public class Organizer {
     @OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
     private List<Event> events;
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }

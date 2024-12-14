@@ -59,7 +59,7 @@ public class EventRepository implements EventRepositoryInterface {
                 "GROUP BY e.event_date";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new EventFeedbackSummaryDTO(
-                rs.getString("date"), // Pegando o campo date como String
+                rs.getString("date"), 
                 rs.getDouble("avgFeedbackRating"),
                 rs.getLong("eventCount"),
                 rs.getLong("feedbackCount")));
@@ -69,22 +69,22 @@ public class EventRepository implements EventRepositoryInterface {
     public List<UpcomingEventDTO> getUpcomingEvents() {
         String sql = "SELECT e.event_date AS date, " +
                 "e.name, " +
-                "e.description, " + // Incluindo a coluna 'description'
+                "e.description, " + 
                 "e.name AS organizerName, " +
                 "e.participants AS maxParticipants, " +
-                "COUNT(s.id) AS registeredParticipants " + // Usando 'subscriptions' para contar os inscritos
+                "COUNT(s.id) AS registeredParticipants " + 
                 "FROM events e " +
-                "LEFT JOIN subscriptions s ON e.id = s.event_id " + // Mudança para 'subscriptions'
+                "LEFT JOIN subscriptions s ON e.id = s.event_id " + 
                 "WHERE e.event_date > CURRENT_DATE " +
-                "GROUP BY e.event_date, e.name, e.description, e.organizer_id, e.participants " + // Incluindo
-                                                                                                  // 'description' no
-                                                                                                  // GROUP BY
+                "GROUP BY e.event_date, e.name, e.description, e.organizer_id, e.participants " + 
+                                                                                                  
+                                                                                                 
                 "ORDER BY e.event_date ASC";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new UpcomingEventDTO(
                 rs.getString("date"),
-                rs.getString("name"), // 'name' no lugar de 'title'
-                rs.getString("description"), // Agora incluindo 'description'
+                rs.getString("name"), 
+                rs.getString("description"), 
                 rs.getString("organizerName"),
                 rs.getInt("maxParticipants"),
                 rs.getInt("registeredParticipants")));
