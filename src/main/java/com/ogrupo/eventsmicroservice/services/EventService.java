@@ -3,7 +3,8 @@ package com.ogrupo.eventsmicroservice.services;
 import com.ogrupo.eventsmicroservice.domain.Event;
 import com.ogrupo.eventsmicroservice.dtos.EventFeedbackSummaryDTO;
 import com.ogrupo.eventsmicroservice.dtos.UpcomingEventDTO;
-import com.ogrupo.eventsmicroservice.repositories.EventRepository;
+import com.ogrupo.eventsmicroservice.interfaces.EventRepositoryInterface;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class EventService {
 
     @Autowired
-    private EventRepository eventRepository;
+    private EventRepositoryInterface eventRepository;
 
     public List<Event> findAll() {
         return eventRepository.findAll();
@@ -38,5 +39,4 @@ public class EventService {
     public int deleteById(Long id) {
         return eventRepository.deleteById(id);
     }
-
 }
