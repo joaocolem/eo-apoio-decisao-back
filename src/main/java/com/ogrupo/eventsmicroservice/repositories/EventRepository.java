@@ -59,7 +59,7 @@ public class EventRepository implements EventRepositoryInterface {
                 "GROUP BY e.event_date";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new EventFeedbackSummaryDTO(
-                rs.getString("date"), 
+                rs.getString("date"),
                 rs.getDouble("avgFeedbackRating"),
                 rs.getLong("eventCount"),
                 rs.getLong("feedbackCount")));
@@ -68,24 +68,23 @@ public class EventRepository implements EventRepositoryInterface {
     @Override
     public List<UpcomingEventDTO> getUpcomingEvents() {
         String sql = "SELECT e.event_date AS date, " +
-                "e.name, " +
-                "e.description, " + 
-                "e.name AS organizerName, " +
+                "e.name AS title, " +
+                "e.description, " +
+                "o.name AS organizerName, " + 
                 "e.participants AS maxParticipants, " +
-                "COUNT(s.id) AS registeredParticipants " + 
+                "COUNT(s.id) AS registeredParticipants " +
                 "FROM events e " +
-                "LEFT JOIN subscriptions s ON e.id = s.event_id " + 
+                "LEFT JOIN subscriptions s ON e.id = s.event_id " +
+                "LEFT JOIN organizers o ON e.organizer_id = o.id " + 
                 "WHERE e.event_date > CURRENT_DATE " +
-                "GROUP BY e.event_date, e.name, e.description, e.organizer_id, e.participants " + 
-                                                                                                  
-                                                                                                 
+                "GROUP BY e.event_date, e.name, e.description, o.name, e.participants " +
                 "ORDER BY e.event_date ASC";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new UpcomingEventDTO(
                 rs.getString("date"),
-                rs.getString("name"), 
-                rs.getString("description"), 
-                rs.getString("organizerName"),
+                rs.getString("title"),
+                rs.getString("description"),
+                rs.getString("organizerName"), 
                 rs.getInt("maxParticipants"),
                 rs.getInt("registeredParticipants")));
     }
