@@ -22,7 +22,10 @@ public class OrganizerService {
     }
 
     public void createOrganizer(OrganizerRequestDTO organizerRequestDTO) {
+
+        
         Organizer organizer = new Organizer();
+
         organizer.setName(organizerRequestDTO.name()); 
         organizer.setEmail(organizerRequestDTO.email());
         organizer.setPhoneNumber(organizerRequestDTO.phoneNumber());
