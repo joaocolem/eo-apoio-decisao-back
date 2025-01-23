@@ -18,10 +18,10 @@ public class TicketPricePredictor {
         // }
 
 
-        if(basePrice > 0){
+        // if(basePrice > 0){
 
-            return Math.max(0, 0 * 0.6);
-        }
+        //     return Math.max(0, 0 * 0.6);
+        // }
         double priceMultiplier = 1.0;
 
         if (isWeekend) {

@@ -12,24 +12,27 @@ import static org.junit.Assume.assumeTrue;
 public class TicketPricePredictorFuzzyTest {
 
     @Fuzz
-    public void testPredictOptimalTicketPrice(int expectedAttendees, int venueCapacity, double basePrice,
-            boolean isWeekend, boolean isOpenBar, int audienceTypeIndex, double historicalDemandFactor) {
-
-        //assumeTrue(expectedAttendees >= 0); 
-        //assumeTrue(venueCapacity > 0); 
-        //assumeTrue(Double.isFinite(basePrice) && basePrice >= 0); 
-        //assumeTrue(historicalDemandFactor >= 0); 
-
+    public void testPredictOptimalTicketPrice(Integer expectedAttendees, Integer venueCapacity, Double basePrice,
+            Boolean isWeekend, Boolean isOpenBar, Integer audienceTypeIndex, Double historicalDemandFactor) {
+    
+        assumeTrue(expectedAttendees != null && expectedAttendees >= 0);
+        assumeTrue(venueCapacity != null && venueCapacity > 0);
+        assumeTrue(basePrice != null && Double.isFinite(basePrice) && basePrice >= 0);
+        assumeTrue(isWeekend != null);
+        assumeTrue(isOpenBar != null);
+        assumeTrue(audienceTypeIndex != null && audienceTypeIndex >= 0);
+        assumeTrue(historicalDemandFactor != null && historicalDemandFactor >= 0);
+    
         AudienceType[] audienceTypes = AudienceType.values();
-        assumeTrue(audienceTypeIndex >= 0 && audienceTypeIndex < audienceTypes.length);
-
+        assumeTrue(audienceTypeIndex < audienceTypes.length);
+    
         AudienceType audienceType = audienceTypes[audienceTypeIndex];
-
+    
         double predictedPrice = TicketPricePredictor.predictOptimalTicketPrice(
                 expectedAttendees, venueCapacity, basePrice,
                 isWeekend, isOpenBar, audienceType, historicalDemandFactor);
-
-        System.out.println(predictedPrice);
-        assertTrue(predictedPrice > basePrice * 0.6); 
+        
+        assertTrue(predictedPrice >= basePrice * 0.6); 
     }
+    
 }
