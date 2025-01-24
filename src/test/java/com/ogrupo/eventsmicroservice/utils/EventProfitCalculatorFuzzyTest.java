@@ -1,24 +1,33 @@
 package com.ogrupo.eventsmicroservice.utils;
 
-import static org.junit.jupiter.api.Assertions.*;
 import edu.berkeley.cs.jqf.fuzz.Fuzz;
 import edu.berkeley.cs.jqf.fuzz.JQF;
+
 import org.junit.runner.RunWith;
-import org.junit.jupiter.api.Assumptions;
+
+import com.ogrupo.eventsmicroservice.generators.PositiveDoubleGenerator;
+import com.pholser.junit.quickcheck.From;
+
+import static org.junit.Assume.assumeTrue;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JQF.class)
 public class EventProfitCalculatorFuzzyTest {
 
+    private final EventProfitCalculator calculator = new EventProfitCalculator();
+
     @Fuzz
-    public void testEstimateProfit(int numberOfParticipants, double pricePerParticipant, boolean isWeekday, double estimatedCost) {
-        EventProfitCalculator calculator = new EventProfitCalculator();
-    
-        Assumptions.assumeTrue(numberOfParticipants >= 0, "Number of participants must be non-negative");
-        Assumptions.assumeTrue(Double.isFinite(pricePerParticipant) && pricePerParticipant >= 0, "Price per participant must be a non-negative finite number");
-        Assumptions.assumeTrue(Double.isFinite(estimatedCost) && estimatedCost >= 0, "Estimated cost must be a non-negative finite number");
-    
+    public void fuzzEstimateProfit(int numberOfParticipants, 
+                                   @From(PositiveDoubleGenerator.class) double pricePerParticipant, 
+                                   boolean isWeekday, 
+                                   @From(PositiveDoubleGenerator.class) double estimatedCost) {
+
+        assumeTrue(numberOfParticipants >= 0);
+
         double profit = calculator.estimateProfit(numberOfParticipants, pricePerParticipant, isWeekday, estimatedCost);
-        assertTrue(profit <= (numberOfParticipants * pricePerParticipant), "Profit should not exceed gross revenue");
+
+        assertTrue("Profit should not exceed total revenue",
+                profit <= numberOfParticipants * (isWeekday ? pricePerParticipant : pricePerParticipant * 1.2));
     }
 }
     
