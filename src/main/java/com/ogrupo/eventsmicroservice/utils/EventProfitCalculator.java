@@ -7,7 +7,7 @@ public class EventProfitCalculator {
 
     public double estimateProfit(int numberOfParticipants, double pricePerParticipant, boolean isWeekday, double estimatedCost) {
         if (numberOfParticipants < 0 || pricePerParticipant < 0 || estimatedCost < 0) {
-            throw new IllegalArgumentException("Values cannot be negative");
+            return 0;
         }
         double adjustedPrice = isWeekday ? pricePerParticipant : pricePerParticipant * WEEKEND_SURCHARGE;
         double totalRevenue = numberOfParticipants * adjustedPrice;
